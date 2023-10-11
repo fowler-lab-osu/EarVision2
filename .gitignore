@@ -1,0 +1,14 @@
+EarDataset/
+SavedModels/
+Inference/
+LoaderSandbox/
+FullEarImageDatasets_2018-2021/
+KernelCountComparisons/
+OutputImages/
+2023EarImagesforInference/
+app/
+__pycache__/
+.vscode/
+*.pptx
+*.png
+*.xxx
