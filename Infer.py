@@ -26,7 +26,7 @@ from EarName import *
 from Metrics import *
 
 
-def Infer(modelDir, epochStr, dirPath = os.getcwd(), filters = [100, 15, 0, 0]):
+def Infer(modelDir, epochStr, dirPath = os.getcwd(), filters = [100, 15, 0, 0.2]):
     time = datetime.datetime.now().strftime('%m.%d_%H.%M')
     bDict = getBYearFamilyData()
     numImagesHandAnno = 0
@@ -181,17 +181,29 @@ def Infer(modelDir, epochStr, dirPath = os.getcwd(), filters = [100, 15, 0, 0]):
         predFluor -= ambiguousKernelCount 
         predTotal = predFluor + predNonFluor 
 
+        
+        # Filter out images that have more than the set number of ambiguous kernels
+        #elif not inTrainingSet and ambiguousKernelCount >= filters[1]:
+        #    imgsForHandAnnotation = True
+        
+
+        # Image, xml, and json files are created for the handAnnotation directory. These are copies of the ones 
+        # available from the main inference folder.
+
+        try:
+            ambiguousKernelPercentage = round(
+                ambiguousKernelCount/(predFluor + predNonFluor - ambiguousKernelCount)*100, 3)     
+        except:
+            ambiguousKernelPercentage  = "N/A"
+
         imgsForHandAnnotation = False
         #filters = [total, ambigs, score, per]
         # Filter out images that have fewer than the set number of kernels total
         if not inTrainingSet and predTotal <= filters[0]:
             imgsForHandAnnotation = True
-        # Filter out images that have more than the set number of ambiguous kernels
-        elif not inTrainingSet and ambiguousKernelCount >= filters[1]:
+        elif not inTrainingSet and ambiguousKernelPercentage >= filters[3]:
             imgsForHandAnnotation = True
 
-        # Image, xml, and json files are created for the handAnnotation directory. These are copies of the ones 
-        # available from the main inference folder.
         if imgsForHandAnnotation:
             numImagesHandAnno += 1
             outputAnnotatedImgCV(
@@ -201,11 +213,6 @@ def Infer(modelDir, epochStr, dirPath = os.getcwd(), filters = [100, 15, 0, 0]):
             x = findAmbiguousCalls(
                 imageTensor[0], finalPrediction, newAnnoDir+"/"+ fileName.split(".")[0] + "_inference.png")
 
-        try:
-            ambiguousKernelPercentage = round(
-                ambiguousKernelCount/(predFluor + predNonFluor - ambiguousKernelCount)*100, 3)     
-        except:
-            ambiguousKernelPercentage  = "N/A"
 
         try:
             predTransmission =   predFluor /  (predTotal) * 100
@@ -390,7 +397,23 @@ def getTrainingSet(modelDir):
         trainingSet.append(l.strip().replace('\\', '/').split('/')[-1].split('.')[0])
     return trainingSet
 
+'''
+JOHN: change family&allele file here!
 
+1. make sure csv file is in format:
+
+    Allele,Family
+    R153F01,50
+    R128F11,51
+    R128F11,52
+    R25F01,53
+    R25F01,54
+    R25F01,55
+    R25F01,56
+    R79D11,57 etc.
+2. replace "Byear_Insertion_Family_forEarVision.csv" with the new filename
+    
+'''
 def getBYearFamilyData():
     bYearFamilyAllele = {}
     # dict format: {family1 : [allele1, allele2], family2 : [allele3], etc.}

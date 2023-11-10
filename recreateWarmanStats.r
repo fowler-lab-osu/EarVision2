@@ -3,24 +3,24 @@
 # bounding box outputs, based on the test image set (Supplemental Figure 5).
 
 
-args <- commandArgs(trailingOnly=TRUE)
+#args <- commandArgs(trailingOnly=TRUE)
 
 
 library(tidyverse)
 
 ###### Importing the data ######
 # Hand counted validation data
-hand_validations <- read.csv(file="./test_set_hand_counts.tsv",
-                               sep = '\t',
-                               header = TRUE)
+#hand_validations <- read.csv(file="./test_set_hand_counts.tsv",
+#                               sep = '\t',
+#                               header = TRUE)
 
-colnames(hand_validations)[1] <- "image_name"
-hand_validations$image_name <- as.character(hand_validations$image_name)
+#colnames(hand_validations)[1] <- "image_name"
+#hand_validations$image_name <- as.character(hand_validations$image_name)
 
-print(args)
+#print(args)
 
 newModelPredictions2018 = read.csv(
-  #"Inference/testingSetWarmanPaperX/InferenceOutput-03.06.23-12.55PM-022-07.11_16.22_0306/InferenceOutput-03.06.23-12.55PM-022-07.11_16.22.csv",
+  "Inference/testingSetWarmanPaperX/InferenceOutput-03.06.23-12.55PM-022-07.11_16.22_0306/InferenceOutput-03.06.23-12.55PM-022-07.11_16.22.csv",
   args[1],
   header = TRUE,
   sep = ","

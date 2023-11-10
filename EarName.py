@@ -65,23 +65,41 @@ class EarName:
         #self.__getBYearFamilyData__()
 
         self.earName = earName
+        try:
+            self.yearLetter = re.findall(r'^[A-Z]', self.earName)[0]
+            self.year = self.yearDict[self.yearLetter]
+            self.earData, self.pollenData = self.earName[1:].split('x')
 
-        self.yearLetter = re.findall(r'^[A-Z]', self.earName)[0]
-        self.year = self.yearDict[self.yearLetter]
-        self.earData, self.pollenData = self.earName[1:].split('x')
+            self.earFamily = self.__setFamily__(self.earData)
+            self.earSubFamily = self.__setSubFamily__(self.earData)
+            self.earPlant = self.__setPlant__(self.earData)
 
-        self.earFamily = self.__setFamily__(self.earData)
-        self.earSubFamily = self.__setSubFamily__(self.earData)
-        self.earPlant = self.__setPlant__(self.earData)
+            self.pollenFamily = self.__setFamily__(self.pollenData)
+            self.pollenSubFamily = self.__setSubFamily__(self.pollenData)
+            self.pollenPlant = self.__setPlant__(self.pollenData)
+            self.pollenMaleNum = self.__setMale__(self.pollenData)
 
-        self.pollenFamily = self.__setFamily__(self.pollenData)
-        self.pollenSubFamily = self.__setSubFamily__(self.pollenData)
-        self.pollenPlant = self.__setPlant__(self.pollenData)
-        self.pollenMaleNum = self.__setMale__(self.pollenData)
+            self.earAllele = None
+            self.pollenAllele = None
+            self.crossType = self.__setCrossType__()
+        except:
+            self.yearLetter = ""
+            self.year = 0
+            self.earData, self.pollenData = "",""
 
-        self.earAllele = None
-        self.pollenAllele = None
-        self.crossType = self.__setCrossType__()
+            self.earFamily = self.__setFamily__(self.earData)
+            self.earSubFamily = self.__setSubFamily__(self.earData)
+            self.earPlant = self.__setPlant__(self.earData)
+
+            self.pollenFamily = self.__setFamily__(self.pollenData)
+            self.pollenSubFamily = self.__setSubFamily__(self.pollenData)
+            self.pollenPlant = self.__setPlant__(self.pollenData)
+            self.pollenMaleNum = self.__setMale__(self.pollenData)
+
+            self.earAllele = ""
+            self.pollenAllele = ""
+            self.crossType = self.__setCrossType__()
+
 
     def __setCrossType__(self):
         if self.pollenFamily == 2:
@@ -94,22 +112,22 @@ class EarName:
     def __setFamily__(self, data):
         if re.findall(r'^[0-9]+', data):
             return int(re.findall(r'^[0-9]+', data)[0])
-        return None
+        return -1
 
     def __setSubFamily__(self, data):
         if re.findall(r'[A-Z]', data):
             return re.findall(r'[A-Z]', data)[0]
-        return None
+        return ""
     
     def __setPlant__(self, data):
         if re.findall(r'-[0-9]+', data):
             return int(re.findall(r'-[0-9]+', data)[0][1:])
-        return None
+        return -1
     
     def __setMale__(self, data):
         if re.findall(r'm[0-9]+', data):
             return re.findall(r'm[0-9]+', data)[0]
-        return None
+        return ""
     
     def __csvEarData__(self):
         return f"{self.earName},{self.year},{self.crossType},{self.earFamily},{self.earSubFamily},{self.earPlant},{self.earAllele},{self.pollenFamily},{self.pollenSubFamily},{self.pollenPlant},{self.pollenMaleNum},{self.pollenAllele},"

@@ -23,24 +23,24 @@ print("Opening " + inferenceDirectoryPath)
 print("Choose filters (press Enter for default)")
 print("Total predicted kernels (100): ")
 total = input()
-print("Number ambiguous kernels (15): ")
+print("Number ambiguous kernels (0): ")
 ambigs = input()
 #print("Average ear score, 0 to 1 (0): ")
 #score = input()
-#print("Percent ambiguous as decimal (0): ")
-#per = input()
-score, per = 0, 0
+print("Percent ambiguous as decimal (0.2): ")
+per = input()
+score = 0
 
 if not total:
     total = 100
 if not ambigs:
-    ambigs = 15
+    ambigs = 0
 if not score:
     score = 0
 if not per:
-    per = 0
+    per = 0.2
 
-filters = [int(total), int(ambigs), int(score), int(per)]
+filters = [int(total), int(ambigs), int(score), float(per)]
 
 root.destroy()
 Infer("Jose_07.18.23_11.24AM", "027", inferenceDirectoryPath, filters)
