@@ -6,6 +6,10 @@ FullEarImageDatasets_2018-2021/
 KernelCountComparisons/
 OutputImages/
 2023EarImagesforInference/
+2023_EarImages/
+FullEarImageDatasets_2018-2022/
+TestEarImageSets_2018-2019/
+OldEarDatasets/
 app/
 __pycache__/
 .vscode/
