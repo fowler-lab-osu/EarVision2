@@ -133,6 +133,8 @@ class EarName:
             return "Ear"
         #elif self.earFamily == 2:
         if self.pollenFamily in self.wtByLetterDict[self.yearLetter]:
+        #elif self.earFamily == 2:
+        if self.pollenFamily in self.wtByLetterDict[self.yearLetter]:
             return "Pollen"
         else:
             return "Other"
