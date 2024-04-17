@@ -24,7 +24,6 @@ TODO next:
 - fix issues with F1 scores
 '''
 
-
 class Trainer():
     def __init__(self, network, trainDataLoader, validationDataLoader, device, hyperparameters, saveDirectory):
         self.device = device
@@ -236,8 +235,7 @@ class Trainer():
                     self.network.train() # Just b/c of a technicality
                     lossDict = self.forwardPass(images, annotations, train = False)
                     lossSum = sum(loss for loss in lossDict.values())
-                    lossMean = lossSum/self.trainingLoader.batch_size
-
+                
                     self.validationLossTotal += lossSum
                     
                     # Now have to switch to eval to get actual predictions instead of losses. And the same batch has to 
@@ -321,7 +319,6 @@ class Trainer():
             except:
                 f1NonFluorAvg = 0
 
-
             print("Validation Loss: " , avgValidationLoss)
             print("Validation Errors: ")
             
@@ -336,7 +333,6 @@ class Trainer():
 
             torch.save(self.network.state_dict(), f"{self.modelDir}/EarVisionModel_{str(e+1).zfill(3)}.pt")
             print(f"Saved EarVisionModel_{str(e+1).zfill(3)}.pt")
-
             print(f"\n~EPOCH {e+1} TRAINING COMPLETE~ \n")
 
         self.trainingLog.close()

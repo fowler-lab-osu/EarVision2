@@ -61,10 +61,36 @@ class EarName:
             "Z": 2020
         }
 
+        '''
+        JOHN: if you want to add a wildtype family number, add it here to the corresponding letter. ex, if A year has WT
+        family numbers 1 and 7, you will change the line for A to:
+            "A": [1,7],
+        To add another year, put a comma after the last element (currently "Z": []), go to the next line, and add your 
+        year with WT family numbers as follows:
+            "D": [9,10,etc.]
+        with NO comma. Be sure to add the year to self.yearDict above by again adding a comma after the last element, 
+        then adding the year data as follows:
+            "D": 2023
+        again with NO comma. Make sure new elements are inside a pair of {} (there will be red marks in the text if you
+        made a mistake). Order DOES NOT matter in self.yearDict or in self.wtByLetterDict.
+        '''
+        self.wtByLetterDict = {
+            "A": [102,3,6,9],
+            "B": [2],
+            "C": [2,4,5,25],
+            "X": [400,401,402,403],
+            "Y": [1],
+            "Z": [1,2,102]
+        }
+
+
         #self.bYearFamilyAllele = {}
         #self.__getBYearFamilyData__()
 
         self.earName = earName
+
+        print("Processing:", self.earName)
+
         try:
             self.yearLetter = re.findall(r'^[A-Z]', self.earName)[0]
             self.year = self.yearDict[self.yearLetter]
@@ -102,9 +128,11 @@ class EarName:
 
 
     def __setCrossType__(self):
-        if self.pollenFamily == 2:
+        #if self.pollenFamily == 2:
+        if self.earFamily in self.wtByLetterDict[self.yearLetter]:
             return "Ear"
-        elif self.earFamily == 2:
+        #elif self.earFamily == 2:
+        if self.pollenFamily in self.wtByLetterDict[self.yearLetter]:
             return "Pollen"
         else:
             return "Other"

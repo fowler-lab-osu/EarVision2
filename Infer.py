@@ -271,6 +271,7 @@ def Infer(modelDir, epochStr, dirPath = os.getcwd(), filters = [100, 15, 0, 0.2]
                 statsDict["listScoresFilter"].append(avgEarScoreAll)
         outFile.write("\n")
         
+        
     outFile.close()
 
     createInfStatsFile(outputDirectory, modelID, epochStr, inferenceIdentifier, numImagesHandAnno, statsDict)
@@ -354,9 +355,18 @@ def createInfStatsFile(outputDirectory, modelID, epochStr, inferenceIdentifier, 
         fluorPerDiffListFilter = [abs(i) for i in statsDict["listFluorPerDiffFilter"] if i == i]
         nonFluorPerDiffListFilter = [abs(i) for i in statsDict["listNonFluorPerDiffFilter"] if i == i]
         totalPerDiffListFilter = [abs(i) for i in statsDict["listTotalPerDiffFilter"] if i == i]
-        avgFluorPerDiffABSFilter = sum(fluorPerDiffListFilter) / len(fluorPerDiffListFilter)
-        avgNonFluorPerDiffABSFilter = sum(nonFluorPerDiffListFilter) / len(nonFluorPerDiffListFilter)
-        avgTotalPerDiffABSFilter = sum(totalPerDiffListFilter) / len(totalPerDiffListFilter)
+        try:
+            avgFluorPerDiffABSFilter = sum(fluorPerDiffListFilter) / len(fluorPerDiffListFilter)
+        except:
+            avgFluorPerDiffABSFilter = -1
+        try:
+            avgNonFluorPerDiffABSFilter = sum(nonFluorPerDiffListFilter) / len(nonFluorPerDiffListFilter)
+        except:
+            avgNonFluorPerDiffABSFilter = -1
+        try:
+            avgTotalPerDiffABSFilter = sum(totalPerDiffListFilter) / len(totalPerDiffListFilter)
+        except:
+            avgTotalPerDiffABSFilter = -1
 
         statsFile.write(f"{inferenceIdentifier},{modelID}_{epochStr},{time},{numImagesHandAnno}," +
                         f"{getAvg(statsDict['listTransDiff'])},{getAvg(statsDict['listTransDiffFilter'])}," +
@@ -430,9 +440,9 @@ def getBYearFamilyData():
 
 
 def setAllele(earnameObj, bYearFamilyAlleleDict):
-    if earnameObj.earFamily == 2:
+    if earnameObj.crossType == "Ear":
         earnameObj.earAllele = "WT"
-    if earnameObj.pollenFamily == 2:
+    if earnameObj.crossType == "Pollen":
         earnameObj.pollenAllele = "WT"
     if earnameObj.earFamily in bYearFamilyAlleleDict:
         earnameObj.earAllele = bYearFamilyAlleleDict[earnameObj.earFamily]
