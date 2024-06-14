@@ -15,6 +15,7 @@ import os
 import numpy as np
 import xml.etree.ElementTree as ET
 import torch
+import math
 
 
 def calculateCountMetrics(predictedCounts, actualCounts, actualTotalInclAmbig = None):                                  
@@ -160,6 +161,7 @@ def findAmbiguousCalls(imageTensor, annotations, name):
     ambiguousOverlaps = cv2.bitwise_and(fluorCentroids, nonFluorCentroids)
     numberLabels, labelMatrix, stats, centroids = cv2.connectedComponentsWithStats(ambiguousOverlaps, 4, cv2.CV_32S )
     ambiguousCount = 0
+    ambiguousCentroids = []
 
     for i, c in enumerate(centroids):
         if(i>0):
@@ -169,14 +171,16 @@ def findAmbiguousCalls(imageTensor, annotations, name):
                 cv2.circle(ambiguousSpots, (int(c[0]), int(c[1])), 8, (255,255,255), -1)
                 ambiguousCount += 1
                 #cv2.rectangle(ambiguousSpots, (int(stats[i][0]), int(stats[i][1])), (int(stats[i][0] + stats[i][2]), int(stats[i][1] + stats[i][3])), (255,255,255), 4)
-    
+                ambiguousCentroids.append([int(c[0]), int(c[1])])
+
     #cv2.imwrite(name.split(".")[0]+"_fluorDots.png", fluorCentroids)
     #cv2.imwrite(name.split(".")[0]+"_nonfluorDots.png", nonFluorCentroids)
     #cv2.imwrite(name.split(".")[0]+"_ambiguousOverlaps.png", ambiguousOverlaps)
 
     cv2.imwrite(name[:-4] + "_ambiguousSpots.png", ambiguousSpots)
 
-    return ambiguousCount
+
+    return ambiguousCount, ambiguousCentroids
 
 
 def outputAnnotatedImgCV(image, annotations, name="OutputImages/outputImg.png", bbox=False, tensor=True):
@@ -255,7 +259,7 @@ def outputPointAnnotatedImg(image, annotationsXML, name="OutputImages/outputPoin
     cv2.imwrite(name, img)
 
 
-def outputPredictionAsXML(prediction, outFileName):
+def outputPredictionAsXML(prediction,outFileName, ambigCentroids = None):
     """
     Create XML file with annotations of ear image.
     """
@@ -265,7 +269,10 @@ def outputPredictionAsXML(prediction, outFileName):
     scores = prediction['scores']
     labels = prediction['labels']
 
+    ambigCentroidsAdded = []
+
     for ind, label in enumerate(labels):
+        include = True
         obj = ET.SubElement(root, "object")
         name = ET.SubElement(obj, "name")
         bndbox = ET.SubElement(obj, "bndbox")
@@ -284,19 +291,7 @@ def outputPredictionAsXML(prediction, outFileName):
 
         box = boxes[ind]
         score = scores[ind]
-        if label.item() == 1:
-            name.text = "nonfluorescent"
-        elif label.item() == 2:
-            name.text = "fluorescent"
-            
-        xmin.text = str(round(box[0].item()))
-        ymin.text = str(round(box[1].item()))
-        xmax.text = str(round(box[2].item()))
-        ymax.text = str(round(box[3].item()))
-
-        confidence.text  = str(round( score.item(), 5 ) )
-
-
+ 
         x1 = round(box[0].item())
         y1 = round(box[1].item())
 
@@ -306,8 +301,36 @@ def outputPredictionAsXML(prediction, outFileName):
         centroidX = round((x1+x2)/2)
         centroidY = round((y1+y2)/2)
 
-        markerX.text = str(centroidX)
-        markerY.text = str(centroidY)
+        if(ambigCentroids!=None):
+            for i,c in enumerate(ambigCentroids):
+                ambigCentX = c[0]
+                ambigCentY = c[1]
+
+                if(math.dist([centroidX, centroidY],[ambigCentX, ambigCentY])<16): 
+                    include = False
+                    if(i not in ambigCentroidsAdded):
+                        name.text = "ambiguous"
+                        markerX.text = str(ambigCentX)
+                        markerY.text = str(ambigCentY)
+                        ambigCentroidsAdded.append(i)
+                    break
+               
+        if(include):
+            if label.item() == 1:
+                name.text = "nonfluorescent"
+            elif label.item() == 2:
+                name.text = "fluorescent"
+                
+            xmin.text = str(round(box[0].item()))
+            ymin.text = str(round(box[1].item()))
+            xmax.text = str(round(box[2].item()))
+            ymax.text = str(round(box[3].item()))
+
+            confidence.text  = str(round( score.item(), 5 ) )
+
+
+            markerX.text = str(centroidX)
+            markerY.text = str(centroidY)
 
     outFile = open(outFileName, 'wb')
     tree = ET.ElementTree(root)

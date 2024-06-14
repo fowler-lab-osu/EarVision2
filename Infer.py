@@ -157,17 +157,21 @@ def Infer(modelDir, epochStr, dirPath = os.getcwd(), filters = [100, 15, 0, 0.2]
         # Next three lines create files
         outputAnnotatedImgCV(
             imageTensor[0], finalPrediction, outputDirectory+"/"+ fileName.split(".")[0] + "_inference.png")
-        outputPredictionAsXML(finalPrediction, outputDirectory+"/" + fileName.split(".")[0]+"_inference.xml")
-        convertPVOC(outputDirectory+"/" + fileName.split(".")[0]+"_inference.xml", image.size)
+        outputPredictionAsXML(finalPrediction, outputDirectory+"/" + fileName.split(".")[0]+"_inference_nonAdjustedAmbig.xml")
+        convertPVOC(outputDirectory+"/" + fileName.split(".")[0]+"_inference_nonAdjustedAmbig.xml", image.size)
 
         predNonFluor = finalPrediction['labels'].tolist().count(1)
         predFluor = finalPrediction['labels'].tolist().count(2)  
     
-        # Next line creates file AND returns number of ambiguous kernels
-        ambiguousKernelCount = findAmbiguousCalls(
+        # Next line creates file AND returns number of ambiguous kernels, and prediction with ambiguity
+        ambiguousKernelCount,  ambiguousCentroids = findAmbiguousCalls(
             imageTensor[0], finalPrediction, outputDirectory+"/"+ fileName.split(".")[0] + "_inference.png")
         statsDict["listPredAmbigs"].append(ambiguousKernelCount)
 
+
+        # Outputs inference results with 3rd ambiguous class
+        outputPredictionAsXML(finalPrediction, outputDirectory+"/" + fileName.split(".")[0]+"_inference.xml",  ambigCentroids = ambiguousCentroids)
+     
         earName = fileName.split(".")[0]
         earNameObj = EarName(earName) 
         setAllele(earNameObj, bDict)
@@ -210,7 +214,7 @@ def Infer(modelDir, epochStr, dirPath = os.getcwd(), filters = [100, 15, 0, 0.2]
                 imageTensor[0], finalPrediction, newAnnoDir+"/"+ fileName.split(".")[0] + "_inference.png")
             outputPredictionAsXML(finalPrediction, newAnnoDir+"/" + fileName.split(".")[0]+"_inference.xml")
             convertPVOC(newAnnoDir+"/" + fileName.split(".")[0]+"_inference.xml", image.size)
-            x = findAmbiguousCalls(
+            x,y = findAmbiguousCalls(
                 imageTensor[0], finalPrediction, newAnnoDir+"/"+ fileName.split(".")[0] + "_inference.png")
 
 
@@ -275,8 +279,6 @@ def Infer(modelDir, epochStr, dirPath = os.getcwd(), filters = [100, 15, 0, 0.2]
     outFile.close()
 
     createInfStatsFile(outputDirectory, modelID, epochStr, inferenceIdentifier, numImagesHandAnno, statsDict)
-
-
 
 def buildImagePathList(imageDirectory):
     imagePaths = []

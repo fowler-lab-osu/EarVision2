@@ -89,7 +89,7 @@ class EarName:
 
         self.earName = earName
 
-        print("Processing:", self.earName)
+        #print("\nProcessing:", self.earName)
 
         try:
             self.yearLetter = re.findall(r'^[A-Z]', self.earName)[0]
