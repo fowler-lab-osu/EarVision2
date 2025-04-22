@@ -2,28 +2,32 @@ import os
 import shutil
 import pandas as pd
 
-print("Moving Inferences Files to Box")
+print("Moving Inferences Files Into Folders Organized by Allele")
+
+'''
+Moves files from Inference output to another folder organized into alleles (targetDir)
+Note: may have to change modelFolder names so they all have the same name, they end up with different timestamps when inference is run
+Requires Info that associates image file names with allele (here AllEarKernelCountData.csv)
+When this .csv lists 'E' for 'Fiji_or_Earvision', script moves Earvision inference file.
+When it lists 'F', moves Fiji handcount file.
+
+'''
 
 inferenceResultDir= "FullEar2018-2022_AmbigAdjust"
 modelFolderID = "InferenceOutput-Jose_07.18.23_11.24AM-027"
 
-boxDir = "D:\\Box\\Michelle\\SpatialAnalysis_Alleles_80"
-fileDataFile = boxDir + "\\AllEarKernelCountData_MichellePaperv2.csv"
+targetDir = "D:\\target dir goes here"
+fileDataFile = "./AllEarKernelCountData.csv"
 fileData  = pd.read_csv(fileDataFile)
 
 print(fileData)
 
-earDir = boxDir+"\\Ear_Crosses"
-pollenDir = boxDir+"\\Pollen_Crosses"
+
+earDir = targetDir+"\\Ear_Crosses"
+pollenDir = targetDir+"\\Pollen_Crosses"
 
 os.makedirs(earDir, exist_ok=True)
 os.makedirs(pollenDir, exist_ok=True)
-
-'''
-for i,row in fileData.iterrows():
-    if row['cross_type'] == 'Ear':
-        print(fileData.iloc[i:i+1]
-        '''
 
 earCrosses = fileData.loc[fileData['cross_type']=='Ear']
 pollenCrosses = fileData.loc[fileData['cross_type']=='Pollen']
@@ -31,14 +35,13 @@ pollenCrosses = fileData.loc[fileData['cross_type']=='Pollen']
 print(earCrosses)
 print(pollenCrosses)
 
-notFoundList = open(boxDir+"\\"+"notFound.txt", "a")
+notFoundList = open(targetDir+"\\"+"notFound.txt", "a")
 
-def moveFiles(alleleDF, boxDir):
+def moveFiles(alleleDF, targetDir):
     alleles = set(alleleDF['allele'].tolist())
     print(alleles)
-    #print(len(alleles))  #should be 80
     for a in alleles:
-        alleleDir = boxDir+"\\"+a
+        alleleDir = targetDir+"\\"+a
         os.makedirs(alleleDir, exist_ok=True)
         earIDs = alleleDF.loc[alleleDF['allele'] == a]
         fijiEarsDF = earIDs.loc[earIDs['Fiji_or_Earvision'] == 'F']
@@ -56,7 +59,6 @@ def moveFiles(alleleDF, boxDir):
                 print("Could not find: ", inferenceResultDir+"\\"+year+"\\"+fileName)
                 notFoundList.write(fileName + "\n")
 
-
         for e in earvisionEars:
             fileName = e + "_inference.xml"
             year = e[0]+'year'
@@ -65,8 +67,6 @@ def moveFiles(alleleDF, boxDir):
             except:
                 print("Could not find: ", inferenceResultDir+"\\"+year + "\\"+ modelFolderID+ "\\" +fileName)
                 notFoundList.write(fileName + "\n")
-
-
        
 moveFiles(earCrosses, earDir)
 moveFiles(pollenCrosses, pollenDir)

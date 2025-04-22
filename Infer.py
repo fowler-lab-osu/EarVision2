@@ -26,7 +26,7 @@ from EarName import *
 from Metrics import *
 
 
-def Infer(modelDir, epochStr, dirPath = os.getcwd(), filters = [100, 15, 0, 0.2]):
+def Infer(modelDir, epochStr, dirPath = os.getcwd(), filters = [100, 15, 0, 20]):
     time = datetime.datetime.now().strftime('%m.%d_%H.%M')
     bDict = getBYearFamilyData()
     numImagesHandAnno = 0
@@ -196,7 +196,7 @@ def Infer(modelDir, epochStr, dirPath = os.getcwd(), filters = [100, 15, 0, 0.2]
 
         try:
             ambiguousKernelPercentage = round(
-                ambiguousKernelCount/(predFluor + predNonFluor - ambiguousKernelCount)*100, 3)     
+                ambiguousKernelCount/(predFluor + predNonFluor + ambiguousKernelCount)*100, 3)     
         except:
             ambiguousKernelPercentage  = "N/A"
 

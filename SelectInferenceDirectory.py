@@ -27,7 +27,7 @@ print("Number ambiguous kernels (0): ")
 ambigs = input()
 #print("Average ear score, 0 to 1 (0): ")
 #score = input()
-print("Percent ambiguous as decimal (0.2): ")
+print("Percent ambiguous [out of 100] (20): ")
 per = input()
 score = 0
 
@@ -38,7 +38,7 @@ if not ambigs:
 if not score:
     score = 0
 if not per:
-    per = 0.2
+    per = 20
 
 filters = [int(total), int(ambigs), int(score), float(per)]
 

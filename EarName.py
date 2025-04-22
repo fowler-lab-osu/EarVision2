@@ -56,6 +56,7 @@ class EarName:
             "A": 2021,
             "B": 2022,
             "C": 2023,
+            "D": 2024,
             "X": 2018,
             "Y": 2019,
             "Z": 2020
@@ -78,6 +79,7 @@ class EarName:
             "A": [102,3,6,9],
             "B": [2],
             "C": [2,4,5,25],
+            "D": [2,4,5,6,7,8,15,20,27],
             "X": [400,401,402,403],
             "Y": [1],
             "Z": [1,2,102]
@@ -126,15 +128,15 @@ class EarName:
             self.pollenAllele = ""
             self.crossType = self.__setCrossType__()
 
-
+ 
     def __setCrossType__(self):
         #if self.pollenFamily == 2:
         if self.earFamily in self.wtByLetterDict[self.yearLetter]:
-            return "Ear"
+            return "Pollen"
         #elif self.earFamily == 2:
         if self.pollenFamily in self.wtByLetterDict[self.yearLetter]:
         #elif self.earFamily == 2:
-            return "Pollen"
+            return "Ear"
         else:
             return "Other"
 
