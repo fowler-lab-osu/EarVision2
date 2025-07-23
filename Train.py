@@ -139,7 +139,7 @@ def main(hyperparameterInput = {}, searchResultDir = ""):
     
     print("EarVision 2.0 \n")
     
-    datasetFull = ObjectDetectionDataset(rootDirectory = "EarDataset")
+    datasetFull = ObjectDetectionDataset(rootDirectory = "TrainingDataset")
 
     trainSet, validationSet = setTrainingAndValidationSets(datasetFull, hyperparameters)
 
