@@ -18,9 +18,11 @@ OldEarDatasets/
 2024_EarImages/
 Deprecated/
 
+googleDriveLink.txt
+cyVerseDatasetLink.txt
+
 app/
 __pycache__/
 .vscode/
 *.pptx
-
 *.xxx
