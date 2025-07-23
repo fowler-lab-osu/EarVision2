@@ -1,4 +1,5 @@
-TrainingData/
+TrainingData/*
+!TrainingData/All
 
 SavedModels/*
 !SavedModels/Jose_07.18.23_11.24AM/
