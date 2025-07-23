@@ -4,7 +4,8 @@ TrainingData/*
 SavedModels/*
 !SavedModels/Jose_07.18.23_11.24AM/
 SavedModels/Jose_07.18.23_11.24AM/*
-SavedModels/Jose_07.18.23_11.24AM/EarVisionModel_027.pt
+!SavedModels/Jose_07.18.23_11.24AM/EarVisionModel_027.7z.001
+!SavedModels/Jose_07.18.23_11.24AM/EarVisionModel_027.7z.002
 !SavedModels/Jose_07.18.23_11.24AM/Hyperparameters.txt
 !SavedModels/Jose_07.18.23_11.24AM/TrainingSet.txt
 !SavedModels/Jose_07.18.23_11.24AM/ValidationSet.txt
