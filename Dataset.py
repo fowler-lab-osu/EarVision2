@@ -26,8 +26,6 @@ class ObjectDetectionDataset(Dataset):
         self.rootDirectory = rootDirectory  
         self.imageDirectory = self.rootDirectory + "/All/Images"
         self.annotationDirectory = self.rootDirectory + "/All/Annotations"
-        #self.imageDirectory = self.rootDirectory + "/Test/Images"
-        #self.annotationDirectory = self.rootDirectory + "/Test/Annotations"
 
         print("----------------------")        
         print("Dataset Root Directory: ", self.rootDirectory)

@@ -18,11 +18,6 @@ from torchvision.ops import box_iou
 
 #This Trainer class is what actually handles the training loop, given a model and the dataset
 
-'''
-TODO next:
-- objectify F1 Scores
-- fix issues with F1 scores
-'''
 
 class Trainer():
     def __init__(self, network, trainDataLoader, validationDataLoader, device, hyperparameters, saveDirectory):

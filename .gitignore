@@ -1,4 +1,7 @@
-EarDataset/
+EarDataset/2018
+EarDataset/2019
+EarDataset/2022
+EarDataset/scanner_calibration
 SavedModels/
 Inference/
 LoaderSandbox/
@@ -19,5 +22,5 @@ app/
 __pycache__/
 .vscode/
 *.pptx
-*.png
+
 *.xxx
