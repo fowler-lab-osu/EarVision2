@@ -2,21 +2,21 @@ import os
 import shutil
 import pandas as pd
 
-print("Moving Inference Files Into Folders Organized by Allele")
+print("Moving Inference Images Into Folders Organized by Allele")
 
 '''
-Moves files from Inference output to another folder organized into alleles (targetDir)
+Moves images from Inference output to another folder organized into alleles (targetDir)
 Note: may have to change modelFolder names so they all have the same name, they end up with different timestamps when inference is run
 Requires Info that associates image file names with allele (here AllEarKernelCountData_58.csv)
-When this .csv lists 'E' for 'Fiji_or_Earvision', script moves Earvision inference file.
-When it lists 'F', moves Fiji handcount file.
+When this .csv lists 'E' for 'Fiji_or_Earvision', script moves Earvision inference image and original image.
+When it lists 'F', moves only original image.
 
 '''
 
 inferenceResultDir= "FullEar2018-2022_AmbigAdjust"
-modelFolderID = "InferenceOutput-Jose_07.18.23_11.24AM-027"
+modelFolderID = "InferenceOutput-Jose_07.18.23_11.24AM-027_forExtract"
 
-targetDir = "D:\\target dir goes here"
+targetDir = "target dir goes here"
 fileDataFile = "./AllEarKernelCountData_58.csv"
 fileData  = pd.read_csv(fileDataFile)
 
@@ -51,21 +51,23 @@ def moveFiles(alleleDF, targetDir):
         earvisionEars = earvisionEarsDF['name'].tolist()
 
         for f in fijiEars:
-            fileName = f + ".xml"
+            fileName = f + ".png"
             year = f[0]+'year'
             try:
                 shutil.copy2(inferenceResultDir+"\\"+year+"\\"+fileName, alleleDir)
             except:
-                print("Could not find: ", inferenceResultDir+"\\"+year+"\\"+fileName)
+                print("Fij Could not find: ", inferenceResultDir+"\\"+year+"\\"+fileName)
                 notFoundList.write(fileName + "\n")
 
         for e in earvisionEars:
-            fileName = e + "_inference.xml"
+            fileName = e + ".png"
+            fileNameI = modelFolderID+"\\"+ e + "_inference.png"
             year = e[0]+'year'
             try:
-                shutil.copy2(inferenceResultDir+"\\"+year + "\\"+ modelFolderID+ "\\" +fileName, alleleDir)
+                shutil.copy2(inferenceResultDir+"\\"+year + "\\"+fileName, alleleDir)
+                shutil.copy2(inferenceResultDir+"\\"+year+"\\"+fileNameI, alleleDir)
             except:
-                print("Could not find: ", inferenceResultDir+"\\"+year + "\\"+ modelFolderID+ "\\" +fileName)
+                print("EV Could not find: ", inferenceResultDir+"\\"+year + "\\" +fileName)
                 notFoundList.write(fileName + "\n")
        
 moveFiles(earCrosses, earDir)

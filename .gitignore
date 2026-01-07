@@ -10,25 +10,7 @@ SavedModels/Jose_07.18.23_11.24AM/*
 !SavedModels/Jose_07.18.23_11.24AM/TrainingSet.txt
 !SavedModels/Jose_07.18.23_11.24AM/ValidationSet.txt
 
-Inference/
-LoaderSandbox/
-FullEarImageDatasets_2018-2021/
-KernelCountComparisons/
-OutputImages/
-2023EarImagesforInference/
-2023_EarImages/
-FullEarImageDatasets_2018-2022/
-FullEar2018-2022_AmbigAdjust/
-TestEarImageSets_2018-2019/
-OldEarDatasets/
-2023_Watched_Cross_Images/
-2024_EarImages/
-Deprecated/
 
-googleDriveLink.txt
-cyVerseDatasetLink.txt
-
-app/
 __pycache__/
 .vscode/
 *.pptx
